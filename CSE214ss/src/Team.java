@@ -1,5 +1,3 @@
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
-
 
 public class Team implements Cloneable {
 
@@ -27,6 +25,7 @@ public class Team implements Cloneable {
 		Team temp = new Team();
 		for (int i = 0; i < teamArray.length; i++) {
 			temp.teamArray[i] = new Player(teamArray[i].getName(), teamArray[i].getHits(), teamArray[i].getErrors());
+			temp.currentNumPlayers++;
 		}
 		return temp;
 	}
@@ -58,7 +57,7 @@ public class Team implements Cloneable {
 		int temp = 0;
 		try { 
 			if (this == null)
-				throw new ObjectNotInstantiatedException("Object not instantiated!");
+				throw new ObjectNotInstantiatedException("Object not instantiated! size");
 			for (int i = 0; i < NUM_PLAYERS_ON_TEAM; i++) {
 				if (teamArray[i] != null)
 					temp++;
@@ -81,9 +80,9 @@ public class Team implements Cloneable {
 	public void addPlayer(Player p, int position) {
 		try {
 			if (size() >= NUM_PLAYERS_ON_TEAM)
-				throw new FullTeamException("No more room on team.");
+				throw new FullTeamException("No more room on team. addPlayer");
 			else if (position > (NUM_PLAYERS_ON_TEAM - 1))
-				throw new IllegalArgumentException("That position is too high for this team.");
+				throw new IllegalArgumentException("That position is too high for this team. addPlayer");
 			else {
 				if (teamArray[(position - 1)] == null)
 					teamArray[(position - 1)] = p;
@@ -104,13 +103,19 @@ public class Team implements Cloneable {
 	
 	public void removePlayer(int position) {
 		try {
-			if (position > (NUM_PLAYERS_ON_TEAM - 1))
-				throw new IllegalArgumentException("That position is too high for this team.");
+			if (position > (NUM_PLAYERS_ON_TEAM))
+				throw new IllegalArgumentException("That position is too high for this team. removePlayer");
 			else {
 				teamArray[position - 1] = null;
-				for (int i = (position - 1); i < NUM_PLAYERS_ON_TEAM; i++) {
-					teamArray[(position - 1)] = teamArray[position];
+				for (int i = (position - 1); i < (NUM_PLAYERS_ON_TEAM - 1); i++) {
+					if (i == (NUM_PLAYERS_ON_TEAM - 1)) {
+						teamArray[i+1] = null;
+						break;
+					}
+					teamArray[(i)] = teamArray[i+1];
+					
 				}
+				currentNumPlayers--;
 			}
 		}
 		catch (IllegalArgumentException e) {
@@ -127,7 +132,7 @@ public class Team implements Cloneable {
 		return str;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws CloneNotSupportedException {
 		Team giants = new Team();
 		Player eli = new Player("Eli Manning", 100, 0);
 		Player nicks = new Player("Hakeem Nicks", 99, 1);
@@ -138,12 +143,18 @@ public class Team implements Cloneable {
 		
 		giants.addPlayer(eli, 1);
 		giants.addPlayer(nicks, 2);
-		giants.addPlayer(zach, 200);
+		giants.addPlayer(zach, 5);
 		giants.addPlayer(rayj, 3);
 		giants.addPlayer(dillo, 2);
 		giants.addPlayer(kobro, 4);
-		giants.removePlayer(1);
 		System.out.println(giants.toString());
+		System.out.println("^Before removal.\n");
+		giants.removePlayer(6);
+		//Team hoodz = (Team)giants.clone();
+		//Team giants2 = (Team)giants.clone();
+		System.out.println(giants.toString());
+		//System.out.println(hoodz.toString());
+	//	System.out.println("\n------------\n" + giants2.toString());
 		
 		
 	}

@@ -101,10 +101,16 @@ public class Team implements Cloneable {
 		}
 	}
 	
+	/**
+	 * Remove Player from passed position on Team.
+	 * @param position Position on team (not index of array).
+	 * @throws IllegalArgumentException Position is out of bounds
+	 */
+	
 	public void removePlayer(int position) {
 		try {
-			if (position > (NUM_PLAYERS_ON_TEAM))
-				throw new IllegalArgumentException("That position is too high for this team. removePlayer");
+			if ((position > (NUM_PLAYERS_ON_TEAM)) || (position < 1))
+				throw new IllegalArgumentException("That position is out of bounds. removePlayer");
 			else {
 				teamArray[position - 1] = null;
 				for (int i = (position - 1); i < (NUM_PLAYERS_ON_TEAM - 1); i++) {
@@ -121,6 +127,20 @@ public class Team implements Cloneable {
 		catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	public Player getPlayer(int position) {
+		try { 
+			if ((position > (NUM_PLAYERS_ON_TEAM)) || (position < 1))
+				throw new IllegalArgumentException("That position is out of bounds. getPlayer");
+			else if (teamArray[(position - 1)] == null)
+				throw new EmptyTeamPositionException("There is no player at that position. getPlayer");
+			else return teamArray[(position - 1)];
+		}
+		catch (IllegalArgumentException | EmptyTeamPositionException e) {
+			System.out.println(e.getMessage());
+		}
+	
 	}
 	
 	public String toString() {
@@ -149,13 +169,11 @@ public class Team implements Cloneable {
 		giants.addPlayer(kobro, 4);
 		System.out.println(giants.toString());
 		System.out.println("^Before removal.\n");
-		giants.removePlayer(6);
+		giants.removePlayer(1);
 		//Team hoodz = (Team)giants.clone();
 		//Team giants2 = (Team)giants.clone();
 		System.out.println(giants.toString());
-		//System.out.println(hoodz.toString());
-	//	System.out.println("\n------------\n" + giants2.toString());
-		
+		System.out.println(giants.getPlayer(6).toString());
 		
 	}
 }

@@ -1,9 +1,10 @@
-/* Zach Samuels
+/*
+ * Zach Samuels
  * 108941490
- * Zach.Samuels@stonybrook.edu
- * Homework #1
- * CSE 214
- * R05
+ * Zachary.Samuels@stonybrook.edu
+ * HW #1
+ * CSE214
+ * R05 - Vyassa Baratham
  */
 
 /**
@@ -89,15 +90,15 @@ public class Player {
 	 * @throws LessThanZeroException hits cannot be less than 0.
 	 */
 	
-	public void setHits(int hits){
-		try {	
+	public void setHits(int hits) throws LessThanZeroException{
+//		try {	
 			if (hits >= 0)
 				this.hits = hits;
 			else throw new LessThanZeroException("Hits can't be < 0");
-		}
-		catch (LessThanZeroException e) {
-			System.out.println(e.getMessage());
-		}
+//		}
+//		catch (LessThanZeroException e) {
+//			System.out.println(e.getMessage());
+//		}
 	}
 	
 	/**
@@ -105,15 +106,15 @@ public class Player {
 	 * @param errors Number of Player's errors.
 	 */
 	
-	public void setErrors(int errors){
-		try {	
+	public void setErrors(int errors) throws LessThanZeroException {
+//		try {	
 			if (errors >= 0)
 				this.errors = errors;
 			else throw new LessThanZeroException("Errors can't be < 0");
-		}
-		catch (LessThanZeroException e) {
-			System.out.println(e.getMessage());
-		}
+//		}
+//		catch (LessThanZeroException e) {
+//			System.out.println(e.getMessage());
+//		}
 	}
 	
 	/**
@@ -121,8 +122,14 @@ public class Player {
 	 * @return String representation of a Player's data.
 	 */
 	public String toString(){
+		
 		String s = new String("");
-		s += "Name: " + name + ". Hits: " + hits + ". Errors: " + errors + ".";
+		s = s.format("%-22s %10d %10d %n", name, hits, errors);
+		
+		
+		
+		//String s = new String("");
+		//s += "Name: " + name + ". Hits: " + hits + ". Errors: " + errors + ".";
 		return s;
 	}
 	
@@ -147,24 +154,4 @@ public class Player {
 		}
 
 	}
-public static void main(String[] args) {
-	Player nig = new Player();
-	System.out.println(nig.toString());
-	Player gin = new Player();
-	System.out.println(gin.toString());
-	
-	nig.setName("Nig Bojangles");
-	nig.setHits(99);
-	nig.setErrors(10);
-	
-	System.out.println(nig.toString());
-	
-	gin.setName("nig Bojangles");
-	gin.setHits(99);
-	gin.setErrors(-10);
-	
-	System.out.println(gin.toString());
-	
-	System.out.println(nig.equals(gin));
-}
 }

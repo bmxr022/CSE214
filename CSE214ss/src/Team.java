@@ -1,4 +1,17 @@
+/*
+ * Zach Samuels
+ * 108941490
+ * Zachary.Samuels@stonybrook.edu
+ * HW #1
+ * CSE214
+ * R05 - Vyassa Baratham
+ */
 
+/**
+ * Class of Team objects. Default size of 5.
+ * @author Zach Samuels
+ *
+ */
 public class Team implements Cloneable {
 
 	private final int NUM_PLAYERS_ON_TEAM = 5;
@@ -18,16 +31,21 @@ public class Team implements Cloneable {
 	 * Makes a clone of the team. Any changes made to the clone will not 
 	 * affect the original and vice versa.
 	 * @return Clone of the team. *Cast to Team to use*
-	 * @throws CloneNotSupportedException 
 	 */
 	
-	public Object clone() throws CloneNotSupportedException {
+	public Object clone() {
 		Team temp = new Team();
-		for (int i = 0; i < teamArray.length; i++) {
-			temp.teamArray[i] = new Player(teamArray[i].getName(), teamArray[i].getHits(), teamArray[i].getErrors());
-			temp.currentNumPlayers++;
-		}
-		return temp;
+//		try {
+			for (int i = 0; i < teamArray.length; i++) {
+				temp.teamArray[i] = new Player(teamArray[i].getName(), teamArray[i].getHits(), teamArray[i].getErrors());
+				temp.currentNumPlayers++;
+			}
+			return temp;
+//		}
+//		catch (CloneNotSupportedException e) {
+//			System.out.println(e.getMessage());
+//		}
+//		return temp;
 	}
 	
 	/**
@@ -50,11 +68,11 @@ public class Team implements Cloneable {
 	
 	/**
 	 * Returns size of Team by counting non-null positions in the array.
-	 * @return int for size of Team. 
+	 * @return current size of team. 
 	 */
 	
 	public int size(){
-		int temp = 0;
+/*		int temp = 0;
 		try { 
 			if (this == null)
 				throw new ObjectNotInstantiatedException("Object not instantiated! size");
@@ -67,6 +85,8 @@ public class Team implements Cloneable {
 			System.out.println(e.getMessage());
 		}
 		return temp;
+*/
+		return currentNumPlayers;
 	}
 	
 	/**
@@ -77,12 +97,14 @@ public class Team implements Cloneable {
 	 * @throws FullTeamException Not enough room on team.
 	 */
 	
-	public void addPlayer(Player p, int position) {
-		try {
-			if (size() >= NUM_PLAYERS_ON_TEAM)
-				throw new FullTeamException("No more room on team. addPlayer");
+	public void addPlayer(Player p, int position) throws FullTeamException, IllegalArgumentException{
+//		try {
+			if ((currentNumPlayers + 1) > NUM_PLAYERS_ON_TEAM)
+				throw new FullTeamException("No more room on team.");
 			else if (position > (NUM_PLAYERS_ON_TEAM - 1))
-				throw new IllegalArgumentException("That position is too high for this team. addPlayer");
+				throw new IllegalArgumentException("That position is too high for this team.");
+			else if (position > (currentNumPlayers + 1))
+				throw new IllegalArgumentException("The other positions are not filled yet.");
 			else {
 				if (teamArray[(position - 1)] == null)
 					teamArray[(position - 1)] = p;
@@ -95,10 +117,10 @@ public class Team implements Cloneable {
 				}
 				currentNumPlayers++;	
 			}
-		}
-		catch (FullTeamException | IllegalArgumentException e) {
-			System.out.println(e.getMessage());
-		}
+//		}
+//		catch (FullTeamException | IllegalArgumentException e) {
+//			System.out.println(e.getMessage());
+//		}
 	}
 	
 	/**
@@ -107,10 +129,10 @@ public class Team implements Cloneable {
 	 * @throws IllegalArgumentException Position is out of bounds
 	 */
 	
-	public void removePlayer(int position) {
-		try {
+	public void removePlayer(int position) throws IllegalArgumentException {
+//		try {
 			if ((position > (NUM_PLAYERS_ON_TEAM)) || (position < 1))
-				throw new IllegalArgumentException("That position is out of bounds. removePlayer");
+				throw new IllegalArgumentException("That position is out of bounds.");
 			else {
 				teamArray[position - 1] = null;
 				for (int i = (position - 1); i < (NUM_PLAYERS_ON_TEAM - 1); i++) {
@@ -123,57 +145,112 @@ public class Team implements Cloneable {
 				}
 				currentNumPlayers--;
 			}
+//		}
+//		catch (IllegalArgumentException e) {
+//			System.out.println(e.getMessage());
+//		}
+	}
+	
+	/**
+	 * Returns player at specified position.
+	 * @param position Position of player.
+	 * @return Player at specified position. If an invalid position is 
+	 * entered, the Player at position 1 is returned.
+	 * @throws IllegalArgumentException position is too high/low.
+	 * @throws EmptyTeamPositionException position on Team is empty.
+	 */
+	
+	public Player getPlayer(int position) throws IllegalArgumentException, EmptyTeamPositionException{
+//		try { 
+			if (position > (currentNumPlayers))
+				throw new IllegalArgumentException("That position is too high.");
+			else if ((position < 1) || (currentNumPlayers < 1))
+				throw new IllegalArgumentException("That position is too low.");
+			else if (teamArray[(position - 1)] == null)
+				throw new EmptyTeamPositionException("There is no player at that position.");
+			else return teamArray[(position - 1)];
+//		}
+//		catch (IllegalArgumentException | EmptyTeamPositionException e) {
+//			System.out.println(e.getMessage() + "...Returning position 1.");
+//			return teamArray[0];
+//		}
+		//return teamArray[(position - 1)];
+	}
+	
+	/**
+	 * Returns Player on Team with the passed name (case insensitive) otherwise returns a default player.
+	 * @param name Name of Player (case insensitive).
+	 * @return Player with same name (or default player if none is found).
+	 * @throws IllegalArgumentException No matching Player names found.
+	 */
+
+	public Player getPlayerByName(String name) throws IllegalArgumentException {
+		boolean exists = false;
+		Player temp = new Player();
+//		try {
+			for (int i = 0; i < (currentNumPlayers); i++) {
+				if (name.toLowerCase().equals(teamArray[i].getName().toLowerCase())) {
+					exists = true;
+					temp = teamArray[i];
+				}
+					
+			}
+			if (exists == false)
+				throw new IllegalArgumentException("No Players match that name.");
+//		}
+//		catch (IllegalArgumentException e) {
+//			System.out.println(e.getMessage() + "... returning new default player.");
+//		}
+		return temp;
+	}
+	
+	/**
+	 * Get leader of chosen statistic.
+	 * @param stat Statistic wanted. Either hits or errors.
+	 * @return Player with the best of the passed stat.
+	 * @throws IllegalArgumentException Invalid entry.
+	 */
+	
+	public Player getLeader(String stat) {
+		Player leader = teamArray[0];
+		try { 
+			if (stat.equals("hits")) {
+				for(int i = 0; i < currentNumPlayers; i++) {
+					if (teamArray[i].getHits() > leader.getHits())
+						leader = teamArray[i];
+				}
+				return leader;
+			}
+			else if (stat.equals("errors")) {
+				for(int i = 0; i < currentNumPlayers; i++) {
+					if (teamArray[i].getErrors() < leader.getErrors())
+						leader = teamArray[i];
+				}
+				return leader;
+			}
+		else throw new IllegalArgumentException("Enter either hits or errors");
 		}
 		catch (IllegalArgumentException e) {
 			System.out.println(e.getMessage());
+			return leader;
 		}
-	}
-	
-	public Player getPlayer(int position) {
-		try { 
-			if ((position > (NUM_PLAYERS_ON_TEAM)) || (position < 1))
-				throw new IllegalArgumentException("That position is out of bounds. getPlayer");
-			else if (teamArray[(position - 1)] == null)
-				throw new EmptyTeamPositionException("There is no player at that position. getPlayer");
-			else return teamArray[(position - 1)];
-		}
-		catch (IllegalArgumentException | EmptyTeamPositionException e) {
-			System.out.println(e.getMessage());
-		}
-	
 	}
 	
 	public String toString() {
 		String str = "";
+		str = str.format("%-25s %10s %10s %n", "Position/Name:", "Hits:", "Errors:");
+		str+= "-----------------------------------------------\n";
+		int counter = 1;
 		for(int i = 0; i < (currentNumPlayers); i++) {
+			str+= counter + ". ";
+			counter++;
 			str+= teamArray[i].toString();
-			str+="\n";
 		}
 		return str;
 	}
 	
-	public static void main(String[] args) throws CloneNotSupportedException {
-		Team giants = new Team();
-		Player eli = new Player("Eli Manning", 100, 0);
-		Player nicks = new Player("Hakeem Nicks", 99, 1);
-		Player zach = new Player("Zachy", 101, 0);
-		Player rayj = new Player("rayj", 69, 0);
-		Player kobro = new Player("kobro", 111, 0);
-		Player dillo = new Player("dillo", 24, 1);
-		
-		giants.addPlayer(eli, 1);
-		giants.addPlayer(nicks, 2);
-		giants.addPlayer(zach, 5);
-		giants.addPlayer(rayj, 3);
-		giants.addPlayer(dillo, 2);
-		giants.addPlayer(kobro, 4);
-		System.out.println(giants.toString());
-		System.out.println("^Before removal.\n");
-		giants.removePlayer(1);
-		//Team hoodz = (Team)giants.clone();
-		//Team giants2 = (Team)giants.clone();
-		System.out.println(giants.toString());
-		System.out.println(giants.getPlayer(6).toString());
-		
+	public void printAllPlayers() {
+		System.out.println(toString());
 	}
+	
 }

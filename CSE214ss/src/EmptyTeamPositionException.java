@@ -7,9 +7,8 @@
  * R05 - Vyassa Baratham
  */
 
-public class FullTeamException extends Throwable {
-	public FullTeamException(String message){
+public class EmptyTeamPositionException extends Exception {
+	public EmptyTeamPositionException(String message){
 		super(message);
 	}
-
 }

@@ -3,7 +3,7 @@ package hw2;
 public class MemoryBlock {
 	private int address;
 	private int size;
-	private boolean status;
+	private boolean status;			//true: allocated.
 	private MemoryBlock next;
 	private MemoryBlock previous;
 	
@@ -15,21 +15,22 @@ public class MemoryBlock {
 		address = 0;
 		size = 0;
 		status = false;
+		next = null;
+		previous = null;
 	}
 	
 	/**
 	 * Constructor for a MemoryBlock.
 	 * @param address Address of MemoryBlock.
 	 * @param size Size of MemoryBlock.
-	 * @param next Next MemoryBlock.
-	 * @param previous Previous MemoryBlock.
 	 */
 	
-	public MemoryBlock(int address, int size, MemoryBlock next, MemoryBlock previous) {
-		this.address = address;
+	public MemoryBlock(int size) {
+		address = 0;
 		this.size = size;
-		this.next = next;
-		this.previous = previous;
+		status = false;
+		next = null;
+		previous = null;
 	}
 	
 	/**
@@ -69,7 +70,7 @@ public class MemoryBlock {
 	}
 	
 	/**
-	 * Gets the MemoryBlock's status of allocated/unallocated.
+	 * Gets the MemoryBlock's status of being allocated/unallocated. True: allocated. False: unallocated.
 	 * @return Whether or not the MemoryBlock is allocated.
 	 */
 	

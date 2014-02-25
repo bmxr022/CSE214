@@ -4,7 +4,7 @@ import java.lang.Exception;
 //import java.awt.SecondaryLoop;
 
 public class MainMemory {
-	public MemoryBlock head;
+	private MemoryBlock head;
 	private MemoryBlock tail;
 	private MemoryBlock largestAvailable;
 	private boolean bestFit;		//true: best fit. false: first fit.
@@ -180,7 +180,14 @@ public class MainMemory {
 		}
 	}
 	
-	public void free(int address) throws AlreadyFreeException {
+	/**
+	 * Frees the MemoryBlock at the passed address and merges it with any neighboring, free MemoryBlocks.
+	 * @param address Address of MemoryBlock to be freed.
+	 * @throws AlreadyFreeException MemoryBlock is already free.
+	 * @throws BlockNotFoundException No MemoryBlock found starting at that address.
+	 */
+	
+	public void free(int address) throws AlreadyFreeException, BlockNotFoundException {
 		MemoryBlock traveler = head;
 		for (int i = 1; i <= numBlocks; i++) {
 			if (traveler.getAddress() == address) {
@@ -209,28 +216,104 @@ public class MainMemory {
 						numBlocks--;
 						break;
 					}
+					break;
 				}
 				if (traveler == tail) {
-					
+					if (traveler.getPrevious() == head) {
+						if (traveler.getPrevious().getStatus() == false) {
+							head.setSize(head.getSize() + traveler.getSize());
+							head.setNext(null);
+							tail = head;
+							numBlocks--;
+							break;
+						}
+					}
+					if (traveler.getPrevious().getStatus() == false) {
+						traveler.setSize(traveler.getSize() + traveler.getPrevious().getSize());
+						traveler.setAddress(traveler.getPrevious().getAddress());
+						traveler.setPrevious(traveler.getPrevious().getPrevious());
+						traveler.getPrevious().getPrevious().setNext(traveler);
+						numBlocks--;
+						break;
+					}
+					break;
 				}
 				if (traveler.getPrevious().getStatus() == false) {
-					traveler.setSize(traveler.getSize() + traveler.getPrevious().getSize());
-					traveler.setAddress(traveler.getPrevious().getAddress());
-					traveler.getPrevious().getPrevious().setNext(traveler);
-					traveler.setPrevious(traveler.getPrevious().getPrevious());
-					numBlocks--;
-					break;
+					if (traveler.getPrevious() == head) {
+						head.setSize(head.getSize() + traveler.getSize());
+						head.setNext(traveler.getNext());
+						traveler.getNext().setPrevious(head);
+						numBlocks--;	
+						traveler = head;
+					}
+					else {
+						traveler.setSize(traveler.getSize() + traveler.getPrevious().getSize());
+						traveler.setAddress(traveler.getPrevious().getAddress());
+						traveler.getPrevious().getPrevious().setNext(traveler);
+						traveler.setPrevious(traveler.getPrevious().getPrevious());
+						numBlocks--;
+						//break;
+					}
 				}
 				if (traveler.getNext().getStatus() == false) {
-					traveler.setSize(traveler.getSize() + traveler.getNext().getSize());
-					traveler.setNext(traveler.getNext().getNext());
-					traveler.getNext().setPrevious(traveler);
-					numBlocks--;
-					break;
+					if (traveler.getNext() == tail) {
+						traveler.setSize(tail.getSize() + traveler.getSize());
+						tail = traveler;
+						traveler.setNext(null);
+						numBlocks--;
+						break;
+					}
+					else {
+						traveler.setSize(traveler.getSize() + traveler.getNext().getSize());
+						traveler.setNext(traveler.getNext().getNext());
+						traveler.getNext().setPrevious(traveler);
+						numBlocks--;
+						break;
+					}
 				}
 				
 			}
+			if ((traveler.getNext() == null) && (traveler.getAddress() != address)) {
+				throw new BlockNotFoundException("No MemoryBlock found at that address."); 
+			}
+			traveler = traveler.getNext();
 		}
+		findLargestAvailable();
+	}
+	
+	/**
+	 * Adds free memory to the last MemoryBlock.
+	 * @param size Size of free MemoryBlock to be added.
+	 */
+	
+	public void addMemory(int size) {
+		availableMemory += size;
+		if (tail.getStatus() == false) {
+			tail.setSize(tail.getSize() + size);
+		}
+		else {
+			MemoryBlock newBlock = new MemoryBlock(size);
+			numBlocks++;
+			newBlock.setPrevious(tail);
+			tail.setNext(newBlock);
+			newBlock.setAddress(tail.getAddress() + tail.getSize());
+			tail = newBlock;
+		}
+		findLargestAvailable();
+	}
+	
+	/**
+	 * Sets the allocation algorithm to either best fit or first fit.
+	 * @param algo Algorithm to use.
+	 */
+	
+	public void setAllocationAlgorithm(String algo) throws IllegalArgumentException {
+		if (algo.toLowerCase().equals("best fit"))
+			bestFit = true;
+		if (algo.toLowerCase().equals("first fit"))
+			bestFit = false;
+		else throw new IllegalArgumentException("Enter \"best fit\" or \"first fit\".");
+		
 	}
 	
 	/**
@@ -243,11 +326,46 @@ public class MainMemory {
 	}
 	
 	/**
-	 * Sets the memory allocation algorithm.
-	 * @param bestFit True for best fit, false for first fit.
+	 * Get the largest available MemoryBlock.
+	 * @return Largest available MemoryBlock.
 	 */
 	
-	public void setBestFit(boolean bestFit) {
-		this.bestFit = bestFit;
+	public MemoryBlock getLargestAvailable() {
+		return largestAvailable;
+	}
+	
+	/**
+	 * Returns the size of the total available memory.
+	 * @return Size of the total available memory.
+	 */
+	
+	public int getAvailableMemory() {
+		return availableMemory;
+	}
+	
+	/**
+	 * Returns the size of the total allocated memory.
+	 * @return Size of the total allocated memory.
+	 */
+	
+	public int getAllocatedMemory() {
+		return allocatedMemory;
+	}
+	
+	/**
+	 * Returns a String representation of all MemoryBlocks.
+	 * @return All MemoryBlocks as a single String.
+	 */
+	
+	public String toString() {
+		MemoryBlock traveler = head;
+		String str = String.format("%-12s %-16s %-8s\n", "Address:", "Status:", "Size:");
+		str += "------------------------------------\n";
+		for (int i = 1; i <= numBlocks; i++) {
+			str += traveler.toString() + "\n";
+			traveler = traveler.getNext();
+		}
+		str += "------------------------------------\n";
+		return str;
 	}
 }

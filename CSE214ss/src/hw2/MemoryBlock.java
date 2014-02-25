@@ -122,4 +122,24 @@ public class MemoryBlock {
 	public void setPrevious(MemoryBlock previous) {
 		this.previous = previous;
 	}
+	
+	/**
+	 * Returns a String that is dependent on whether or not the MemoryBlock is allocated or free.
+	 * @return Either "Allocated" or "Free."
+	 */
+	
+	private String statusString() {
+		if (status)
+			return "Allocated";
+		else return "Free";
+	}
+	
+	/**
+	 * Returns a String representation of the MemoryBlock.
+	 */
+	
+	public String toString() {
+		String str = String.format("%-12d %-16s %-8d", address, statusString(), size);
+		return str;
+	}
 }

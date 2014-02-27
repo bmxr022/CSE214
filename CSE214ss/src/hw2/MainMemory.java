@@ -1,7 +1,21 @@
+/*
+ * Zach Samuels
+ * 108941490
+ * Zachary.Samuels@stonybrook.edu
+ * HW #2
+ * CSE214
+ * R05 - Vyassa Baratham
+ */
 package hw2;
 
 import java.lang.Exception;
 //import java.awt.SecondaryLoop;
+
+/**
+ * Simulation of memory.
+ * @author Zach Samuels
+ *
+ */
 
 public class MainMemory {
 	private MemoryBlock head;
@@ -67,13 +81,11 @@ public class MainMemory {
 				traveler.setStatus(true);
 				if (largestAvailable == traveler)
 					findLargestAvailable();
-				System.out.println("swapperoonie");
 				return traveler.getAddress();
 			}
 			if ((traveler.getSize() > size) && (traveler.getStatus() == false)) {
 				if (candidate.getStatus()) {
 					candidate = traveler;
-					//bestSize = candidate.getSize();
 				}
 				if (traveler.getSize() < candidate.getSize())
 					candidate = traveler;
@@ -93,7 +105,6 @@ public class MainMemory {
 			head.setStatus(true);
 			if (largestAvailable == candidate)
 				findLargestAvailable();
-			System.out.println("cand headdie");
 			return newBlock.getAddress();
 		}
 		
@@ -106,7 +117,6 @@ public class MainMemory {
 		newBlock.setStatus(true);
 		if (largestAvailable == candidate)
 			findLargestAvailable();
-		System.out.println("reggy");
 		return newBlock.getAddress();
 		
 		
@@ -142,7 +152,6 @@ public class MainMemory {
 					newBlock.setAddress(0);
 					traveler.setAddress(newBlock.getSize());
 					traveler.setSize(traveler.getSize() - newBlock.getSize());
-					System.out.println("trav == head case :)");
 					if (largestAvailable == traveler)
 						findLargestAvailable();
 					return traveler.getAddress();
@@ -155,7 +164,6 @@ public class MainMemory {
 				newBlock.setStatus(true);
 				newBlock.setAddress(newBlock.getPrevious().getAddress() + newBlock.getPrevious().getSize());
 				traveler.setAddress(newBlock.getSize() + newBlock.getAddress());
-				System.out.println("reg param case :)");
 				if (largestAvailable == traveler)
 					findLargestAvailable();
 				return traveler.getAddress();
@@ -310,7 +318,7 @@ public class MainMemory {
 	public void setAllocationAlgorithm(String algo) throws IllegalArgumentException {
 		if (algo.toLowerCase().equals("best fit"))
 			bestFit = true;
-		if (algo.toLowerCase().equals("first fit"))
+		else if (algo.toLowerCase().equals("first fit"))
 			bestFit = false;
 		else throw new IllegalArgumentException("Enter \"best fit\" or \"first fit\".");
 		

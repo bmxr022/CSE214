@@ -1,5 +1,17 @@
+/*
+ * Zach Samuels
+ * 108941490
+ * Zachary.Samuels@stonybrook.edu
+ * HW #2
+ * CSE214
+ * R05 - Vyassa Baratham
+ */
 package hw2;
 import java.util.Scanner;
+/**
+ * Menu-driven program that simulates the management of memory. Default size is 1000.
+ * @author Zach Samuels
+ */
 
 public class MemoryManager {
 	private static MainMemory memory = new MainMemory(1000);
@@ -102,11 +114,19 @@ public class MemoryManager {
 		System.exit(0);
 	}
 	
+	/**
+	 * Clears data from input fields.
+	 */
+	
 	private static void clearInputs() {
 		menuChoice = "";
 		inStr = "";
 		printMenu();
 	}
+	
+	/**
+	 * Prints option menu.
+	 */
 	
 	private static void printMenu() {
 		System.out.println("------------------------------------");

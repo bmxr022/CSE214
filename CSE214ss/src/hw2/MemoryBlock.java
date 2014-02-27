@@ -1,4 +1,18 @@
+/*
+ * Zach Samuels
+ * 108941490
+ * Zachary.Samuels@stonybrook.edu
+ * HW #2
+ * CSE214
+ * R05 - Vyassa Baratham
+ */
 package hw2;
+
+/**
+ * Simulation of a block of memory.
+ * @author Zach Samuels
+ *
+ */
 
 public class MemoryBlock {
 	private int address;

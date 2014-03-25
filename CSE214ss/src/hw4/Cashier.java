@@ -1,8 +1,5 @@
 package hw4;
 
-import java.util.Queue;
-import java.util.LinkedList;
-
 public class Cashier {
 	
 	private CustomerQueue queue = new CustomerQueue();

@@ -2,6 +2,7 @@ package hw4;
 
 public class Customer {
 	private int timeLeft;
+	private int timeWaited;
 	
 	/**
 	 * Creates a Customer with specified time left.
@@ -10,10 +11,11 @@ public class Customer {
 	
 	public Customer(int timeLeft) {
 		this.timeLeft = timeLeft;
+		timeWaited = 0;
 	}
 	
 	/**
-	 * Time remaining for Customer.
+	 * Get time remaining for Customer.
 	 * @return Current time remaining.
 	 */
 	
@@ -22,10 +24,21 @@ public class Customer {
 	}
 	
 	/**
+	 * Get the amount of time the Customer has spent waiting.
+	 * @return Amount of time the Customer has waited.
+	 */
+	
+	public int getTimeWaited() {
+		return timeWaited;
+	}
+	
+	/**
 	 * Lowers Customer's time remaining by 1.
+	 * Increase their time spent waiting by 1.
 	 */
 	
 	public void decrementTime() {
 		timeLeft--;
+		timeWaited++;
 	}
 }

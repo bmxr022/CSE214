@@ -52,4 +52,13 @@ public class Kiosk {
 	public void fixMe() {
 		broken = true;
 	}
+	
+	/**
+	 * Check whether kiosk is broken or not.
+	 * @return Status of kiosk.
+	 */
+	
+	public boolean isBroken() {
+		return broken;
+	}
 }

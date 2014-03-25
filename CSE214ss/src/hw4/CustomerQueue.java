@@ -1,3 +1,11 @@
+/*
+ * Zach Samuels
+ * 108941490
+ * samuels.zach@gmail.com
+ * HW #4
+ * CSE214
+ * R05 - Vyassa Baratham
+ */
 package hw4;
 
 import java.util.Queue;
@@ -61,15 +69,4 @@ public class CustomerQueue extends LinkedList<Customer> implements Queue<Custome
 		return (queueSize == 0);
 	}
 	
-	public static void main(String[] args) {
-		CustomerQueue q = new CustomerQueue();
-		q.enqueue(10);
-		q.enqueue(11);
-		q.enqueue(21);
-		q.serve();
-		System.out.println(q.dequeue());
-		System.out.println(q.dequeue());
-		System.out.println(q.dequeue());
-		System.out.println(q.isEmpty());
-	}
 }

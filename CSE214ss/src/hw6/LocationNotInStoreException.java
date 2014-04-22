@@ -8,8 +8,8 @@
  */
 package hw6;
 
-public class ItemNotInStoreException extends Exception {
-	public ItemNotInStoreException(String message) {
+public class LocationNotInStoreException extends Exception {
+	public LocationNotInStoreException(String message) {
 		super(message);
 	}
 }

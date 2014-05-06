@@ -11,7 +11,7 @@ public class DataSet {
 	private ArrayList<RaceResult> dataList;
 	private String name;
 	private double[] average;
-	int numRows;
+	private int numRows;
 	
 	/**
 	 * Constructor. Reads and stores data from a .csv file.
@@ -20,7 +20,7 @@ public class DataSet {
 	 * @throws FileNotFoundException File not found or not .csv filetype
 	 */
 	
-	private DataSet(String csvFilename, String name) throws FileNotFoundException  {
+	public DataSet(String csvFilename, String name) throws FileNotFoundException  {
 		File csvFile = new File(System.getProperty("user.dir") + "\\" + csvFilename);
 		if ((csvFile.exists()) && csvFilename.endsWith(".csv")) {
 			
@@ -94,17 +94,73 @@ public class DataSet {
 		return numRows;
 	}
 	
+	/**
+	 * Returns a String representation of the DataSet.
+	 * @return String representation of the DataSet.
+	 */
+	
 	public String toString() {
-		String result = String.format("%-10s %-3d %-10.2f %-10.2f %-10.2f %-10.2f %-10.2f", name, numRows, average[0], 
+		String result = String.format("%-10s %-18d %-9.2f %-9.2f %-9.2f %-9.2f %-9.2f", name, numRows, average[0], 
 				average[1], average[2], average[3], average[4]);
 		return result;
+	}
+	
+	/**
+	 * Change name of this DataSet.
+	 * @param newName New name of this DataSet.
+	 */
+	
+	public void setName(String newName) {
+		this.name = newName;
+	}
+	
+	/**
+	 * Return name of this DataSet.
+	 * @return Name of this DataSet.
+	 */
+	
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * Return the data from this DataSet.
+	 * @return Data from this DataSet.
+	 */
+	
+	public ArrayList<RaceResult> getDataList() {
+		return dataList;
+	}
+	
+	/**
+	 * Return the averages of the races.
+	 * @return Averages of the races.
+	 */
+	
+	public double[] getAverage() {
+		return average;
+	}
+	
+	/**
+	 * Return number of rows in this DataSet.
+	 * @return Number of rows in this DataSet.
+	 */
+	
+	public int getNumRows() {
+		return numRows;
 	}
 	
 	public static void main(String[] args) {
 		System.out.println(System.getProperty("user.dir"));
 		try {
 			DataSet ds = new DataSet("honda.csv");
+			DataSet ds2 = new DataSet("hyundai.csv");
 			System.out.println(ds.toString());
+			System.out.println(ds2.toString());
+			DataSetNameComparator dsnc = new DataSetNameComparator();
+			System.out.println(dsnc.compare(ds2, ds));
+			System.out.println(dsnc.equals(ds2));
+			
 		}
 		catch (FileNotFoundException e)
 		{
